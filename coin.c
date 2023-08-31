@@ -1,7 +1,9 @@
+/* coinflip.c - flip a coin
+ * by unsubtract, MIT License */
 #ifdef NOLIBC
 #define STDIN_FILENO 0
 #define STDOUT_FILENO 1
-void* syscall3(void* n, void* a, void* b, void* c);
+extern void* syscall3(void* n, void* a, void* b, void* c);
 
 /* syscall function definitions + ugly X macro spaghetti because
  * I thought it would be cooler than writing out identical functions by hand.
@@ -44,11 +46,11 @@ static output_buffer o = {.p = 0};
  * fully read, in order to reduce the number of syscalls made.
  * A buffer of 256 bytes is the largest where getrandom(2) may never fail. */
 static unsigned char randbyte(void) {
-    static unsigned char randbuffer[0x100], p = 0;
+    static unsigned char randbuffer[256], p = 0;
     unsigned char n;
-    if (p == 0) (void)getrandom(randbuffer, 0x100, 0);
+    if (p == 0) (void)getrandom(randbuffer, 256, 0);
     n = randbuffer[p];
-    p = (p + 1) & 0xFF;
+    p = (p + 1) & 255;
     return n;
 }
 
@@ -79,7 +81,8 @@ static void oappendi(output_buffer* o, unsigned n) {
 }
 
 static void oflush(output_buffer* o) {
-    (void)write(STDOUT_FILENO, o->b, o->p);
+    long i = 0;
+    while (i < o->p) i += write(STDOUT_FILENO, o->b + i, o->p-i);
     o->p = 0;
 }
 
@@ -102,6 +105,6 @@ int main(void) {
         oappend(&o, "\n", 1);
 
         /* terrible hack to pause until Enter is pressed */
-        while (o.b[0] != '\n') (void)read(STDIN_FILENO, o.b, 1);
+        do (void)read(STDIN_FILENO, o.b, 1); while (o.b[0] != '\n');
     }
 }

@@ -30,5 +30,5 @@ a [while now](https://github.com/unsubtract/Programming-Language-nolibc), and us
 an opportunity to end up writing a simple buffered, formatted output library using only POSIX syscalls.
 
 Building without libc (try `NOLIBC=1 ./build.sh`, only Linux x86_64 supported)
-creates an impressively small binary (1.03 KiB on my system), far smaller than 
+creates an impressively small binary (1.04 KiB on my system), far smaller than 
 the source code itself (as it should be).
