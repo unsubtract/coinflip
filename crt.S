@@ -1,6 +1,6 @@
 .intel_syntax noprefix
 .text
-.global _start, syscall3
+.global _start, read, write, getrandom
 
 _start:
     xor ebp, ebp
@@ -16,10 +16,16 @@ _start:
     //mov eax, 60
     //syscall
 
-syscall3:
-    mov rax, rdi
-    mov rdi, rsi
-    mov rsi, rdx
-    mov rdx, rcx
+read:
+    xor eax, eax
+    syscall
+    ret
+write:
+    xor eax, eax
+    inc eax
+    syscall
+    ret
+getrandom:
+    mov eax, 318
     syscall
     ret
