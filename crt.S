@@ -7,7 +7,7 @@ _start:
     /* program doesn't actually use arguments */
     //pop rdi
     //mov rsi, rsp
-    and rsp, -16
+    //and rsp, -16 // not needed, ABI guarentees alignment on x86_64
     //call main
     jmp main
 
@@ -21,8 +21,7 @@ read:
     syscall
     ret
 write:
-    xor eax, eax
-    inc eax
+    mov eax, 1
     syscall
     ret
 getrandom:
