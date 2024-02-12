@@ -31,5 +31,5 @@ and used this as an opportunity to create a simple, buffered
 and formatted output library using only Linux/BSD syscalls.
 
 Building without libc (try `NOLIBC=1 ./build.sh`, only Linux x86_64 supported)
-creates an impressively small binary (0.99 KiB on my system),
+creates an impressively small binary (0.98 KiB on my system),
 far smaller than the source code itself.

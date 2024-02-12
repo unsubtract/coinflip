@@ -20,7 +20,6 @@ typedef struct {
 } output_buffer;
 
 static unsigned char randbyte(void);
-static unsigned digits(unsigned n, unsigned addend);
 static void oappend(const char* buf);
 static void oappendi(unsigned n);
 static void oflush(void);
@@ -40,15 +39,6 @@ static unsigned char randbyte(void) {
     return n;
 }
 
-/* uses simple tail recursion
- * The addend (which should normally start as 1) would be abstracted away if
- * it weren't for the fact that manipulating it is useful in the
- * implementation of oappendi() (it will add or subtract from the result) */
-static unsigned digits(unsigned n, unsigned addend) {
-    if (n < 10) return addend;
-    return digits(n / 10, addend + 1);
-}
-
 static void oappend(const char* buf) {
     unsigned i = 0;
     while (buf[i] != '\0') {
@@ -59,8 +49,8 @@ static void oappend(const char* buf) {
 }
 
 static void oappendi(unsigned n) {
-    unsigned d = digits(n, 0), i = 1;
-    while (d--) i *= 10;
+    unsigned i = 1, j = n;
+    while (j /= 10) i *= 10;
     for (; i > 0; i /= 10) {
         o.b[o.p++] = '0' + ((n / i) % 10);
         if (o.p > OBUF_MASK) oflush();
